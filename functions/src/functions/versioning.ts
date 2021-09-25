@@ -10,7 +10,7 @@ export const getVersioning = functions
           'getVersioning request received for version: ' + version, {structuredData: true}
       );
       if (version === undefined || !appVersions.includes(version)) {
-        response.status(406).send('{"success": false, "message": "Missing version or provided version not supported"}');
+        response.status(406).send({success: false, message: 'Missing version or provided version not supported'});
         return;
       }
 
@@ -19,13 +19,14 @@ export const getVersioning = functions
           .get()
           .then(
               (versioning) =>
-                response.send(versioning.data())
+                response.send({success: true, message: versioning.data()})
           )
           .catch(
-              (reason) =>
-                functions.logger.error('failed to collect versioning from firestore, reason: ' + reason)
-          )
-          .then(() => response.status(500).send(
-              '{"success": false, "message": "Failed to collect the versioning info try it again later"}')
+              (reason) => {
+                functions.logger.error('failed to collect versioning from firestore, reason: ' + reason);
+                response.status(500).send(
+                    {success: false, message: 'Failed to collect the versioning info try it again later'}
+                );
+              }
           );
     });

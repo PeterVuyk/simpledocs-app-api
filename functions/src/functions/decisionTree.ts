@@ -10,23 +10,22 @@ export const getDecisionTree = functions
           'getDecisionTree request received for version: ' + version, {structuredData: true}
       );
       if (version === undefined || !appVersions.includes(version)) {
-        response.status(406).send('{"success": false, "message": "Missing version or provided version not supported"}');
+        response.status(406).send({success: false, message: 'Missing version or provided version not supported'});
         return;
       }
 
       db.collection('decisionTree')
           .where('isDraft', '==', false)
           .get()
-          .then(
-              (decisionTree) => response.send(
-                  decisionTree.docs.map((doc) => doc.data())
-              )
+          .then((decisionTree) =>
+            response.send({success: true, message: decisionTree.docs.map((doc) => doc.data())})
           )
           .catch(
-              (reason) =>
-                functions.logger.error('failed to collect decisionTree from firestore, reason: ' + reason)
-          )
-          .then(() => response.status(500).send(
-              '{"success": false, "message": "Failed to collect the decisionTree info try it again later"}')
+              (reason) => {
+                functions.logger.error('failed to collect decisionTree from firestore, reason: ' + reason);
+                response.status(500).send(
+                    {success: false, message: 'Failed to collect the decisionTree info try it again later'}
+                );
+              }
           );
     });

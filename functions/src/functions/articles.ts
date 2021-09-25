@@ -12,28 +12,28 @@ export const getArticles = functions
           {structuredData: true}
       );
       if (version === undefined || !appVersions.includes(version)) {
-        response.status(406).send('{"success": false, "message": "Missing version or provided version not supported"}');
+        response.status(406).send({success: false, message: 'Missing version or provided version not supported'});
         return;
       }
       if (!isBookTypeValid(bookType)) {
-        response.status(400).send('{"success": false, "message": "bookType query string expected but is missing"');
+        response.status(400).send({succes: false, message: 'bookType query string expected but is missing'});
         return;
       }
 
       db.collection(bookType)
           .where('isDraft', '==', false)
           .get()
-          .then(
-              (article) => response.send(
-                  article.docs.map((doc) => doc.data())
-              )
+          .then((article) =>
+            response.send({success: true, message: article.docs.map((doc) => doc.data())}
+            )
           )
           .catch(
-              (reason) =>
-                functions.logger.error('failed to collect articles from firestore, reason: ' + reason)
-          )
-          .then(() => response.status(500).send(
-              '{"success": false, "message": "Failed to collect the articles info try it again later"}')
+              (reason) => {
+                functions.logger.error('failed to collect articles from firestore, reason: ' + reason);
+                response.status(500).send(
+                    {success: false, message: 'Failed to collect the articles info try it again later'}
+                );
+              }
           );
     });
 

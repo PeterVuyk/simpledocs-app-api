@@ -10,23 +10,23 @@ export const getCalculations = functions
           'getCalculations request received for version: ' + version, {structuredData: true}
       );
       if (version === undefined || !appVersions.includes(version)) {
-        response.status(406).send('{"success": false, "message": "Missing version or provided version not supported"}');
+        response.status(406).send({success: false, message: 'Missing version or provided version not supported'});
         return;
       }
 
       db.collection('calculations')
           .where('isDraft', '==', false)
           .get()
-          .then(
-              (calculationInfo) => response.send(
-                  calculationInfo.docs.map((doc) => doc.data())
-              )
+          .then((calculationInfo) =>
+            response.send({success: true, message: calculationInfo.docs.map((doc) => doc.data())}
+            )
           )
           .catch(
-              (reason) =>
-                functions.logger.error('failed to collect calculations from firestore, reason: ' + reason)
-          )
-          .then(() => response.status(500).send(
-              '{"success": false, "message": "Failed to collect the calculation info try it again later"}')
+              (reason) => {
+                functions.logger.error('failed to collect calculations from firestore, reason: ' + reason);
+                response.status(500).send(
+                    {success: false, message: 'Failed to collect the calculation info try it again later'}
+                );
+              }
           );
     });
