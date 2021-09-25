@@ -10,7 +10,7 @@ export const getVersioning = functions
           'getVersioning request received for version: ' + version, {structuredData: true}
       );
       if (version === undefined || !appVersions.includes(version)) {
-        response.status(406).send('Missing version or provided version not supported');
+        response.status(406).send('{"success": false, "message": "Missing version or provided version not supported"}');
         return;
       }
 
