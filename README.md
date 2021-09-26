@@ -13,4 +13,5 @@ To apply the changes to firestore, go to the functions directory and run:
 
 Then go to the project root and deploy it on firebase:
 
-    firebase deploy
+    firebase deploy # all functions
+    firebase deploy --only functions:keepFunctionsWarmCron  # single function

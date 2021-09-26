@@ -15,10 +15,14 @@ export const keepFunctionsWarmCron = functions
       for (const url of getUrls()) {
         axios.get(url.toString(), {headers: {Accept: `application/json;api-version=${latestVersion}`}})
             .then((response) => response.data)
-            .then((apiResponse: ApiResponse) => functions.logger.info(
-                `Warmup function url ${url.toString()} with version ${latestVersion}, isSuccess:
-            ${apiResponse.success}, message: ${apiResponse.message}`
-            ));
+            .then((apiResponse: ApiResponse) => {
+              const message = `Warmup function url ${url.toString()} with version ${latestVersion}, isSuccess:
+            ${apiResponse.success}, message: ${apiResponse.message}`;
+              apiResponse.success ? functions.logger.info(message) : functions.logger.error(message);
+            })
+            .catch((reason) => functions.logger.error(
+                `Failed to warmup function with url ${url.toString()}, reason: ${reason}`)
+            );
       }
 
       functions.logger.info('Cron finished');
