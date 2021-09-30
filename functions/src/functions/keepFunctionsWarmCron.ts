@@ -9,7 +9,7 @@ interface ApiResponse {
 }
 
 export const keepFunctionsWarmCron = functions
-    .region('europe-west1')
+    .region('europe-west3')
     .pubsub.schedule('every minute')
     .onRun(async () => {
       for (const url of getUrls()) {
@@ -31,9 +31,9 @@ export const keepFunctionsWarmCron = functions
 const latestVersion = appVersions.sort((a, b) => b.localeCompare(a))[0];
 
 const getUrls = (): URL[] => {
-  const url = 'https://europe-west1-ambulancezorg-app.cloudfunctions.net/';
+  const url = 'https://europe-west3-ambulancezorg-app.cloudfunctions.net/';
   const articlesUrl = new URL('getArticles', url);
-  articlesUrl.searchParams.append('bookType', 'instructionManual');
+  articlesUrl.searchParams.append('bookType', 'bookTypeCron');
   return [
     articlesUrl,
     new URL('getCalculations', url),

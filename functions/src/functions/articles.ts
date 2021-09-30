@@ -4,7 +4,7 @@ import {appVersions} from '../appVersions';
 import headerHelper from '../helper/headerHelper';
 
 export const getArticles = functions
-    .region('europe-west1')
+    .region('europe-west3')
     .https.onRequest((request, response) => {
       const version = headerHelper.getVersionFromHeaderAccept(request.get('Accept') as string);
       const bookType = request.query.bookType as string;
@@ -24,7 +24,7 @@ export const getArticles = functions
         return;
       }
 
-      db.collection(bookType)
+      db.collection('books').doc(bookType).collection(bookType)
           .where('isDraft', '==', false)
           .get()
           .then((article) =>
@@ -43,6 +43,7 @@ export const getArticles = functions
 
 const isBookTypeValid = (bookType: string) => {
   return [
+    'bookTypeCron',
     'instructionManual',
     'ontheffingGoedeTaakuitoefening',
     'brancherichtlijnMedischeHulpverlening',

@@ -4,7 +4,7 @@ import {appVersions} from '../appVersions';
 import headerHelper from '../helper/headerHelper';
 
 export const getCalculations = functions
-    .region('europe-west1')
+    .region('europe-west3')
     .https.onRequest((request, response) => {
       const version = headerHelper.getVersionFromHeaderAccept(request.get('Accept') as string);
       functions.logger.info(
