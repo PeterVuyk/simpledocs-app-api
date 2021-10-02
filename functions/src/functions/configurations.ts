@@ -18,7 +18,7 @@ export const getConfigurations = functions
       }
 
       db.collection('configurations')
-          .doc('appConfig')
+          .doc('appConfigurations')
           .get()
           .then(
               (configurations) =>
