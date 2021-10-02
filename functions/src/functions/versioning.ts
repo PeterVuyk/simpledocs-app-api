@@ -3,6 +3,11 @@ import {db} from '../db';
 import {appVersions} from '../appVersions';
 import headerHelper from '../helper/headerHelper';
 
+interface Versioning {
+  version: string;
+  aggregate: string;
+}
+
 export const getVersioning = functions
     .region('europe-west3')
     .https.onRequest((request, response) => {
@@ -18,11 +23,14 @@ export const getVersioning = functions
       }
 
       db.collection('versioning')
-          .doc('aggregate')
           .get()
-          .then(
+          .then((query) =>
+            query.docs
+                .map((document) => document.data() as Versioning)
+                .filter((version) => version.aggregate !== 'cmsConfigurations')
+          ).then(
               (versioning) =>
-                response.send({success: true, message: null, result: versioning.data()})
+                response.send({success: true, message: null, result: versioning})
           )
           .catch(
               (reason) => {

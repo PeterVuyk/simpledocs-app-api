@@ -18,13 +18,13 @@ export const getArticles = functions
             .send({success: false, message: 'Missing version or provided version not supported', result: []});
         return;
       }
-      if (!isBookTypeValid(bookType)) {
+      if (!bookType) {
         response
             .status(400).send({succes: false, message: 'bookType query string expected but is missing', result: []});
         return;
       }
 
-      db.collection('books').doc(bookType).collection(bookType)
+      db.collection('books').doc(bookType).collection(bookType.trim())
           .where('isDraft', '==', false)
           .get()
           .then((article) =>
@@ -40,14 +40,3 @@ export const getArticles = functions
               }
           );
     });
-
-const isBookTypeValid = (bookType: string) => {
-  return [
-    'bookTypeCron',
-    'instructionManual',
-    'ontheffingGoedeTaakuitoefening',
-    'brancherichtlijnMedischeHulpverlening',
-    'regelingOGS2009',
-    'RVV1990',
-  ].includes(bookType);
-};
