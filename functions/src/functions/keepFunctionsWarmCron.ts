@@ -39,6 +39,5 @@ const getUrls = (): URL[] => {
     new URL('getCalculations', url),
     new URL('getConfigurations', url),
     new URL('getDecisionTree', url),
-    new URL('getVersioning', url),
   ];
 };

@@ -26,7 +26,7 @@ export const getConfigurations = functions
           )
           .catch(
               (reason) => {
-                functions.logger.error('failed to collect versioning from firestore, reason: ' + reason);
+                functions.logger.error('failed to collect configurations from firestore, reason: ' + reason);
                 response.status(500).send(
                     {
                       success: false,
