@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import appInfoRequestValidator from '../validators/AppInfoRequestValidator';
-import getCalculations from '../firestore/getCalculations';
-import getAppConfigurations from '../firestore/getAppConfigurations';
-import getDecisionTree from '../firestore/getDecisionTree';
-import getArticles from '../firestore/getArticles';
+import getCalculations from '../firebase/firestore/getCalculations';
+import getAppConfigurations from '../firebase/firestore/getAppConfigurations';
+import getDecisionTree from '../firebase/firestore/getDecisionTree';
+import getArticles from '../firebase/firestore/getArticles';
 import {AppInfoRequest} from '../model/AppInfoRequest';
 
 //  TODO: later change runWith depending on the environment, also read:
@@ -11,9 +11,13 @@ import {AppInfoRequest} from '../model/AppInfoRequest';
 
 export const getAppInfo = functions
     .runWith({minInstances: 5})
-    .region('europe-west3')
+    .region(functions.config().api.firebase_region)
     .https.onCall(async (data, context) => {
       if (!context.auth?.uid) {
+        if (data.environment === 'triggerFunctionsCron') {
+          functions.logger.info('Function triggered to keep it warm');
+          return {success: true, message: 'Function triggered to keep it warm', result: null};
+        }
         functions.logger.info('Function getConfigurations called but user not authenticated');
         return {success: false, message: 'Authentication required', result: null};
       }
