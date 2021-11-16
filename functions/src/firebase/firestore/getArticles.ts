@@ -7,7 +7,9 @@ const getArticles = (bookType: string, isProduction: boolean) => {
 const getArticlesDraft = async (bookType: string) => {
   const articles = await firestore.collection('books').doc(bookType.trim()).collection(bookType.trim())
       .get()
-      .then((article) => article.docs.map((doc) => doc.data()));
+      .then((article) => article.docs.map((doc) => {
+        return {id: doc.id, ...doc.data()} as any;
+      }));
   return articles.filter((value) => {
     if (!('markedForDeletion' in value)) {
       return true;
@@ -20,7 +22,9 @@ const getArticlesPublished = async (bookType: string) => {
   return firestore.collection('books').doc(bookType.trim()).collection(bookType.trim())
       .where('isDraft', '==', false)
       .get()
-      .then((article) => article.docs.map((doc) => doc.data()));
+      .then((article) => article.docs.map((doc) => {
+        return {id: doc.id, ...doc.data()};
+      }));
 };
 
 export default getArticles;
