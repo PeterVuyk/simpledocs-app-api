@@ -8,7 +8,7 @@ const getArticlesDraft = async (bookType: string) => {
   const articles = await firestore.collection('books').doc(bookType.trim()).collection(bookType.trim())
       .get()
       .then((article) => article.docs.map((doc) => {
-        return {id: doc.id, ...doc.data()} as any;
+        return {id: doc.id.replace('-draft', ''), ...doc.data()} as any;
       }));
   return articles.filter((value) => {
     if (!('markedForDeletion' in value)) {

@@ -5,6 +5,16 @@ Go to the functions directory and run the following 2 commands in the terminal, 
     firebase emulators:start --only functions
     tsc --watch
 
+## Environment variables
+
+To list all environment variables:
+
+    firebase functions:config:get
+
+To set an environment variable:
+
+    firebase functions:config:set api.firebase_region=europe-west3
+
 ## Deployment
 
 To apply the changes to firestore, go to the functions directory and run:
