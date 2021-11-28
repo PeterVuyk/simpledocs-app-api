@@ -3,7 +3,7 @@ import appInfoRequestValidator from '../validators/AppInfoRequestValidator';
 import getCalculations from '../firebase/firestore/getCalculations';
 import getAppConfigurations from '../firebase/firestore/getAppConfigurations';
 import getDecisionTree from '../firebase/firestore/getDecisionTree';
-import getArticles from '../firebase/firestore/getArticles';
+import getBookPages from '../firebase/firestore/getBookPages';
 import {AppInfoRequest} from '../model/AppInfoRequest';
 
 //  TODO: later change runWith depending on the environment, also read:
@@ -61,7 +61,7 @@ const getResponseData = async (request: AppInfoRequest) => {
       continue;
     }
     if (versionInfo.isBookType) {
-      result = {...result, [aggregate]: await getArticles(aggregate, isProduction)};
+      result = {...result, [aggregate]: await getBookPages(aggregate, isProduction)};
       continue;
     }
     if (aggregate === 'decisionTree') {
