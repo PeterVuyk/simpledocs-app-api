@@ -13,7 +13,7 @@ To list all environment variables:
 
 To set an environment variable:
 
-    firebase functions:config:set api.firebase_region=europe-west3
+    firebase -P simpleDocs|default functions:config:set api.firebase_region=europe-west3
 
 ## Deployment
 
@@ -23,5 +23,5 @@ To apply the changes to firestore, go to the functions directory and run:
 
 Then go to the project root and deploy it on firebase:
 
-    firebase deploy # all functions
-    firebase deploy --only functions:keepFunctionsWarmCron  # single function
+    firebase deploy -P default|development # all functions
+    firebase deploy -P default|development --only functions:keepFunctionsWarmCron  # single function

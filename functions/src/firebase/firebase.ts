@@ -5,7 +5,6 @@ import * as functions from 'firebase-functions';
 const firebaseConfig = {
   apiKey: functions.config().api.firebase.api_key,
   authDomain: functions.config().api.firebase.auth_domain,
-  databaseURL: functions.config().api.firebase.database_url,
   projectId: functions.config().api.firebase.project_id,
   storageBucket: functions.config().api.firebase.storage_bucket,
   messagingSenderId: functions.config().api.firebase.messaging_sender_id,

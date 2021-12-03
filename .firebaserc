@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "ambulancezorg-app"
-  }
+    "default": "ambulancezorg-app",
+    "development": "simpledocs-eu"
+  },
+  "targets": {}
 }
