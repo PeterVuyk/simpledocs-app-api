@@ -10,6 +10,6 @@ web-build/
 .eslintcache
 *.log
 
-# macOS
 .DS_Store
 .idea/
+functions/.runtimeconfig.json
