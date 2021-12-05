@@ -10,7 +10,7 @@ import {AppInfoRequest} from '../model/AppInfoRequest';
 //  https://firebase.google.com/docs/functions/manage-functions#min-max-instances
 
 export const getAppInfo = functions
-    .runWith({minInstances: 5})
+    .runWith({minInstances: functions.config().api.app_info_min_instances})
     .region(functions.config().api.firebase_region)
     .https.onCall(async (data, context) => {
       if (!context.auth?.uid) {
