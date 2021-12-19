@@ -1,2 +1,4 @@
-export * from './functions/appInfo';
-export * from './functions/triggerFunctionsCron';
+import {getAppInfo} from './functions/appInfo';
+import {triggerFunctionsCron} from './functions/triggerFunctionsCron';
+
+exports.appApi = {getAppInfo, triggerFunctionsCron};

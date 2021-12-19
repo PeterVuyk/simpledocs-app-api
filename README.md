@@ -27,5 +27,5 @@ To apply the changes to firestore, go to the functions directory and run:
 
 Then go to the project root and deploy it on firebase:
 
-    firebase deploy -P development|academie-voor-ambulancezorg # all functions
-    firebase deploy -P development|academie-voor-ambulancezorg --only functions:keepFunctionsWarmCron  # single function
+    firebase deploy --only functions:appApi -P development
+    firebase deploy --only functions:appApi -P academie-voor-ambulancezorg # customer specific
