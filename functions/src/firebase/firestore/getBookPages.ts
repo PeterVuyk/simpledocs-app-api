@@ -1,7 +1,8 @@
 import {firestore} from '../FirebaseAdmin';
 
-const getBookPages = (bookType: string, isProduction: boolean) => {
-  return isProduction ? getPublishedPages(bookType) : getDraftPages(bookType);
+const getBookPages = async (bookType: string, isProduction: boolean) => {
+  const result = isProduction ? await getPublishedPages(bookType) : await getDraftPages(bookType);
+  return {result, aggregate: bookType};
 };
 
 const getDraftPages = async (bookType: string) => {

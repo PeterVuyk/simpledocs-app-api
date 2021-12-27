@@ -45,32 +45,41 @@ export const getAppInfo = functions
 const getResponseData = async (request: AppInfoRequest) => {
   const isProduction = !['staging'].includes(request.environment);
   const appConfigurations = await getAppConfigurations(isProduction);
-  let result;
-  result = {appConfigurations: appConfigurations};
   if (appConfigurations?.versioning === null || appConfigurations?.versioning === undefined) {
     throw new Error('Collected appConfigurations, but versioning is empty. Collecting configurations failed');
   }
-  for (const aggregate of Object.keys(appConfigurations.versioning)) {
-    const versionInfo = appConfigurations.versioning[aggregate];
-    if (
-      request?.versioning !== null &&
-      request?.versioning !== undefined &&
-      request?.versioning[aggregate] !== undefined &&
-      request?.versioning[aggregate].version === versionInfo.version
-    ) {
-      continue;
+  const aggregatesToBeUpdated = Object
+      .keys(appConfigurations.versioning)
+      .filter((aggregate) =>
+          appConfigurations.versioning[aggregate]?.version !== request?.versioning?.[aggregate]?.version)
+      .map((aggregate) => {
+        return {aggregate, isBookType: appConfigurations.versioning[aggregate]?.isBookType};
+      });
+
+  const result = await Promise.all(aggregatesToBeUpdated.map(async (value) => {
+    if (value.isBookType) {
+      return getBookPages(value.aggregate, isProduction);
     }
-    if (versionInfo.isBookType) {
-      result = {...result, [aggregate]: await getBookPages(aggregate, isProduction)};
-      continue;
+    if (value.aggregate === 'decisionTree') {
+      return getDecisionTree(isProduction);
     }
-    if (aggregate === 'decisionTree') {
-      result = {...result, [aggregate]: await getDecisionTree(isProduction)};
-      continue;
+    if (value.aggregate === 'calculations') {
+      return getCalculations(isProduction);
     }
-    if (aggregate === 'calculations') {
-      result = {...result, [aggregate]: await getCalculations(isProduction)};
-    }
-  }
-  return result;
+    return Promise.resolve(null);
+  }));
+
+  functions.logger.info(
+      'The following aggregates will be updated for the calling user' +
+      result.map((value) => value?.aggregate).join(',')
+  );
+
+  const appInfo = result.filter((value) => value !== null).reduce(
+      (obj, item) =>
+        Object.assign(obj, {
+          [item!.aggregate]: item!.result,
+        }),
+      {}
+  );
+  return {appConfigurations, ...appInfo};
 };

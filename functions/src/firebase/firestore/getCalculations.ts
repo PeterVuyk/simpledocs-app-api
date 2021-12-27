@@ -1,7 +1,8 @@
 import {firestore} from '../FirebaseAdmin';
 
-const getCalculations = (isProduction: boolean) => {
-  return isProduction ? getCalculationsPublished() : getCalculationsDrafts();
+const getCalculations = async (isProduction: boolean) => {
+  const result = isProduction ? await getCalculationsPublished() : await getCalculationsDrafts();
+  return {result, aggregate: 'calculations'};
 };
 
 const getCalculationsDrafts = async () => {

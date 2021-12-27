@@ -6,7 +6,7 @@ export const triggerFunctionsCron = functions
     .pubsub.schedule('every minute')
     .onRun(async () => {
       Firebase.functions(functions.config().api.firebase_region)
-          .httpsCallable('getAppInfo')({
+          .httpsCallable('appApi-getAppInfo')({
             environment: 'triggerFunctionsCron',
           }).then((value) => value.data)
           .then((data) => functions.logger.info('functions triggered successful', data))

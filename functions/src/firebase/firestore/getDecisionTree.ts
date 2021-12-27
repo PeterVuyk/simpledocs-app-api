@@ -1,7 +1,8 @@
 import {firestore} from '../FirebaseAdmin';
 
-const getDecisionTree = (isProduction: boolean) => {
-  return isProduction ? getDecisionTreePublished() : getDecisionTreeDrafts();
+const getDecisionTree = async (isProduction: boolean) => {
+  const result = isProduction ? await getDecisionTreePublished() : await getDecisionTreeDrafts();
+  return {result, aggregate: 'decisionTree'};
 };
 
 const getDecisionTreeDrafts = async () => {
