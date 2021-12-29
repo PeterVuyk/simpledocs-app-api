@@ -4,6 +4,10 @@ Set up first a config file with the environment settings:
 
     cd functions && firebase functions:config:get -P development > .runtimeconfig.json
 
+Set the project that you want to use:
+
+    firebase use development | academie-voor-ambulancezorg
+    
 Go to the functions directory and run the following 2 commands in the terminal, the first to emulate the functions, the second to transpile typescript to javascript.
 
     firebase emulators:start --only functions
