@@ -70,7 +70,7 @@ const getResponseData = async (request: AppInfoRequest) => {
   }));
 
   functions.logger.info(
-      'The following aggregates will be updated for the calling user' +
+      'The following aggregates will be updated for the calling user: ' +
       result.map((value) => value?.aggregate).join(',')
   );
 
