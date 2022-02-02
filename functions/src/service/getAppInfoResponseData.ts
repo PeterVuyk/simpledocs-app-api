@@ -1,6 +1,6 @@
 import {AppInfoRequest} from '../model/AppInfoRequest';
 import getAppConfigurations from '../firebase/firestore/getAppConfigurations';
-import {UpdateMoment} from '../model/UpdateMoment';
+import {UPDATE_ON_STARTUP, UpdateMoment} from '../model/UpdateMoment';
 import getBookPages from '../firebase/firestore/getBookPages';
 import getDecisionTree from '../firebase/firestore/getDecisionTree';
 import getCalculations from '../firebase/firestore/getCalculations';
@@ -12,7 +12,9 @@ const getAppInfoResponseData = async (request: AppInfoRequest, updateMoment: Upd
   if (appConfigurations?.versioning === null || appConfigurations?.versioning === undefined) {
     throw new Error('Collected appConfigurations, but versioning is empty. Collecting configurations failed');
   }
-  const aggregatesToBeUpdated = Object
+
+  // Check if a new version is available for the given aggregate.
+  let aggregatesToBeUpdated = Object
       .keys(appConfigurations.versioning)
       .filter((aggregate) =>
             appConfigurations.versioning[aggregate]?.version !== request?.versioning?.[aggregate]?.version)
@@ -21,6 +23,15 @@ const getAppInfoResponseData = async (request: AppInfoRequest, updateMoment: Upd
       .map((aggregate) => {
         return {aggregate, isBookType: appConfigurations.versioning[aggregate]?.isBookType};
       });
+
+  // If the aggregate is marked to be updated after startup, but the user doesn't
+  // have the aggregate on his phone yet then it need to be added on startup.
+  if (updateMoment === UPDATE_ON_STARTUP) {
+    const missingAggregatesInApp = Object.keys(appConfigurations.versioning)
+        .filter((aggregate) => !Object.keys(request?.versioning ?? {}).includes(aggregate))
+        .map((aggregate) => ({aggregate, isBookType: appConfigurations.versioning[aggregate]?.isBookType}));
+    aggregatesToBeUpdated = [...aggregatesToBeUpdated, ...missingAggregatesInApp];
+  }
 
   const result = await Promise.all(aggregatesToBeUpdated.map(async (value) => {
     if (value.isBookType) {
