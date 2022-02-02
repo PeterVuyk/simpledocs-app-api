@@ -1,4 +1,5 @@
-import {getAppInfo} from './functions/appInfo';
+import {getAppInfoOnStartup} from './functions/getAppInfoOnStartup';
+import {getAppInfoOnStartupReady} from './functions/getAppInfoOnStartupReady';
 import {triggerFunctionsCron} from './functions/triggerFunctionsCron';
 
-exports.appApi = {getAppInfo, triggerFunctionsCron};
+exports.appApi = {getAppInfoOnStartup, getAppInfoOnStartupReady, triggerFunctionsCron};

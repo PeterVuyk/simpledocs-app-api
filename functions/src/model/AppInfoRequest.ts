@@ -1,3 +1,5 @@
+import {UpdateMoment} from './UpdateMoment';
+
 export interface AppInfoRequest {
   versioning?: Versioning;
   appVersion: string;
@@ -9,4 +11,5 @@ interface Versioning {
 interface VersionInfo {
   isBookType: boolean;
   version: string;
+  updateMoment: UpdateMoment;
 }
