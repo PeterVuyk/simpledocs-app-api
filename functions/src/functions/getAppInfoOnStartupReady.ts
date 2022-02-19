@@ -13,13 +13,12 @@ export const getAppInfoOnStartupReady = functions
           functions.logger.info('Function triggered to keep it warm');
           return {success: true, message: 'Function triggered to keep it warm', result: null};
         }
-        functions.logger.info('Function getConfigurations called but user not authenticated');
+        functions.logger.warn('Function getConfigurations called but user not authenticated');
         return {success: false, message: 'Authentication required', result: null};
       }
-      functions.logger.info('validationResult', JSON.stringify(data));
       const validationResult = appInfoRequestValidator(data);
       if (validationResult !== '') {
-        functions.logger.info('Function getConfigurations called but request validation failed: ' + validationResult);
+        functions.logger.error('Function getConfigurations called but request validation failed: ' + validationResult);
         return {success: false, message: 'request validation failed', result: null};
       }
 
