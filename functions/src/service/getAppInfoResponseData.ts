@@ -2,8 +2,6 @@ import {AppInfoRequest} from '../model/AppInfoRequest';
 import getAppConfigurations from '../firebase/firestore/getAppConfigurations';
 import {UPDATE_ON_STARTUP, UpdateMoment} from '../model/UpdateMoment';
 import getBookPages from '../firebase/firestore/getBookPages';
-import getDecisionTree from '../firebase/firestore/getDecisionTree';
-import getCalculations from '../firebase/firestore/getCalculations';
 import * as functions from 'firebase-functions';
 
 const getAppInfoResponseData = async (request: AppInfoRequest, updateMoment: UpdateMoment) => {
@@ -37,12 +35,7 @@ const getAppInfoResponseData = async (request: AppInfoRequest, updateMoment: Upd
     if (value.isBookType) {
       return getBookPages(value.aggregate, isProduction);
     }
-    if (value.aggregate === 'decisionTree') {
-      return getDecisionTree(isProduction);
-    }
-    if (value.aggregate === 'calculations') {
-      return getCalculations(isProduction);
-    }
+    // For now we only have books. But if we have later other resources, we can add them here in the promise.
     return Promise.resolve(null);
   }));
 
