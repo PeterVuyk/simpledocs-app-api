@@ -3,6 +3,7 @@ import getAppConfigurations from '../firebase/firestore/getAppConfigurations';
 import {UPDATE_ON_STARTUP, UpdateMoment} from '../model/UpdateMoment';
 import getBookPages from '../firebase/firestore/getBookPages';
 import * as functions from 'firebase-functions';
+import getStandalonePages from '../firebase/firestore/getStandalonePages';
 
 const getAppInfoResponseData = async (request: AppInfoRequest, updateMoment: UpdateMoment) => {
   const isProduction = !['staging'].includes(request.environment);
@@ -35,7 +36,10 @@ const getAppInfoResponseData = async (request: AppInfoRequest, updateMoment: Upd
     if (value.isBookType) {
       return getBookPages(value.aggregate, isProduction);
     }
-    // For now we only have books. But if we have later other resources, we can add them here in the promise.
+    if (value.aggregate === 'standalonePages') {
+      return getStandalonePages(isProduction);
+    }
+    // For now we only have books and standalonePages. later we can add here more resources in the promise.
     return Promise.resolve(null);
   }));
 
