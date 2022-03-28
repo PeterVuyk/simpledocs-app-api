@@ -1,7 +1,9 @@
 import {firestore} from '../FirebaseAdmin';
+import omit from '../../util/omit';
 
 const getStandalonePages = async (isProduction: boolean) => {
-  const result = isProduction ? await getStandalonePagesPublished() : await getStandalonePagesDrafts();
+  let result = isProduction ? await getStandalonePagesPublished() : await getStandalonePagesDrafts();
+  result = result.map((value) => omit(value, ['isDraft', 'markedForDeletion']));
   return {result, aggregate: 'standalonePages'};
 };
 
