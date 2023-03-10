@@ -6,7 +6,7 @@ Set up first a config file with the environment settings:
 
 Set the project that you want to use:
 
-    firebase use development | academie-voor-ambulancezorg
+    firebase use development | foo-bar
     
 Go to the functions directory and run the following 2 commands in the terminal, the first to emulate the functions, the second to transpile typescript to javascript.
 
@@ -32,4 +32,4 @@ To apply the changes to firestore, go to the functions directory and run:
 Then go to the project root and deploy it on firebase:
 
     firebase deploy --only functions:appApi -P development
-    firebase deploy --only functions:appApi -P academie-voor-ambulancezorg # customer specific
+    firebase deploy --only functions:appApi -P foo-bar # customer specific
